@@ -1,0 +1,86 @@
+name: 🧬 Self-Healing Evolution
+
+on:
+  # Manual trigger button
+  workflow_dispatch:
+    inputs:
+      test_value:
+        description: 'Fibonacci input value to test'
+        required: false
+        default: '15'
+  
+  # Automatic trigger every 30 minutes
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+
+# Required permissions to commit changes
+permissions:
+  contents: write
+
+jobs:
+  evolve:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: 📦 Install Dependencies
+        run: |
+          pip install groq
+      
+      - name: 🧬 Run The Organism
+        id: run_organism
+        continue-on-error: true
+        run: |
+          echo "Running main.py..."
+          python main.py 2> error.log
+          echo "exit_code=$?" >> $GITHUB_OUTPUT
+      
+      - name: 📋 Display Error Log (if failed)
+        if: steps.run_organism.outcome == 'failure'
+        run: |
+          echo "💀 Organism crashed! Error log:"
+          cat error.log || echo "No error log generated"
+      
+      - name: 🏥 Activate AI Doctor
+        if: steps.run_organism.outcome == 'failure'
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          echo "🧬 Initiating self-healing..."
+          python healer.py
+      
+      - name: 💾 Commit Healed Code
+        if: steps.run_organism.outcome == 'failure'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "🧬 Auto-Evolution: Fixed Bug (Generation ${{ github.run_number }})"
+          commit_author: "Ouroboros Bot <ouroboros@github-actions>"
+          file_pattern: "main.py"
+      
+      - name: ✅ Success Report
+        if: steps.run_organism.outcome == 'success'
+        run: |
+          echo "✅ Organism is healthy and functioning!"
+          echo "🧬 No healing required this cycle."
+      
+      - name: 📊 Workflow Summary
+        if: always()
+        run: |
+          echo "### 🧬 Evolution Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.run_organism.outcome }}" == "success" ]; then
+            echo "**Status:** ✅ Healthy" >> $GITHUB_STEP_SUMMARY
+            echo "**Action:** No healing required" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "**Status:** 💀 Crashed → 🏥 Healed" >> $GITHUB_STEP_SUMMARY
+            echo "**Action:** AI Doctor deployed fix" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "**Generation:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date -u)" >> $GITHUB_STEP_SUMMARY
