@@ -1,30 +1,36 @@
 """
 main.py - The Organism
-A Fibonacci calculator with an intentional bug for demonstration.
+A Fibonacci calculator with an intentional bug fixed for demonstration.
 """
 
 
 def fibonacci(n):
     """Calculate the nth Fibonacci number"""
-    # Intentional bug: Raise error for inputs > 10
-    if n > 10:
-        raise ValueError("Input too large! This organism is weak and will crash.")
+    # Check for negative inputs
+    if n < 0:
+        raise ValueError("Input must be a non-negative integer.")
     
-    if n <= 0:
-        return 0
-    elif n == 1:
-        return 1
-    else:
-        a, b = 0, 1
-        for _ in range(2, n + 1):
-            a, b = b, a + b
-        return b
+    # Base cases
+    if n <= 1:
+        return n
+    
+    # Initialize variables for the Fibonacci sequence
+    a, b = 0, 1
+    
+    # Calculate the nth Fibonacci number
+    for _ in range(2, n + 1):
+        a, b = b, a + b
+    
+    return b
 
 
 if __name__ == "__main__":
-    # Test with a value that triggers the bug
+    # Test with a value
     test_value = 15
-    print(f"Calculating Fibonacci({test_value})...")
-    result = fibonacci(test_value)
-    print(f"Result: {result}")
-    print("Calculation successful")
+    try:
+        print(f"Calculating Fibonacci({test_value})...")
+        result = fibonacci(test_value)
+        print(f"Result: {result}")
+        print("Calculation successful")
+    except ValueError as e:
+        print(f"Error: {e}")
