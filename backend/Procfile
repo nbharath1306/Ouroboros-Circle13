@@ -1,0 +1,4 @@
+# Railway/Render Deployment Config
+# This tells the platform to use Python and run the FastAPI app
+
+web: uvicorn main:app --host 0.0.0.0 --port $PORT
