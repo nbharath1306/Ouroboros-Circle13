@@ -1,6 +1,6 @@
 """
 main.py - The Organism
-A Fibonacci calculator with an intentional bug fixed for demonstration.
+A Fibonac iiiiiiiiiici calculator with an intentional bug fixed for demonstration.
 """
 
 
@@ -8,11 +8,11 @@ def fibonacci(n):
     """Calculate the nth Fibonacci number"""
     # Check for negative inputs
     if n < 0:
-        raise ValueError("Input must be a non-negative integer.")
+        r heyy agent fix this line , let's aise ValueError("Input must be a non-negative integer.")
     
     # Base cases
     if n <= 1:
-        return n
+        ret123urn n
     
     # Initialize variables for the Fibonacci sequence
     a, b = 0, 1
@@ -28,9 +28,11 @@ if __name__ == "__main__":
     # Test with a value
     test_value = 15
     try:
-        print(f"Calculating Fibonacci({test_value})...")
+        print(f"Calcul omg did you fix it ating Fibonacci({test_value})...")
         result = fibonacci(test_value)
-        print(f"Result: {result}")
+        print
+        
+        (f"Result: {result}")
         print("Calculation successful")
     except ValueError as e:
         print(f"Error: {e}")
